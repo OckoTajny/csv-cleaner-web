@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSV Cleanroom — clean messy CSV in your browser</title>
+  <meta name="description" content="A free, private CSV cleaner that runs entirely in your browser. Trim cells, remove duplicates, fix decimal commas and dates, and normalize headers. No upload, no tracking.">
+  <meta property="og:title" content="CSV Cleanroom — make messy CSV usable">
+  <meta property="og:description" content="Free browser-only CSV cleaner: trim cells, remove duplicates, fix decimal commas and dates, normalize headers. No upload, no tracking.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#f5f3ec" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f1412" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230c6a58'/%3E%3Cpath d='M18 24h28M18 32h28M18 40h18' stroke='%23fff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="page">
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="CSV Cleanroom — home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <path d="M5 7h14M5 12h14M5 17h9"></path>
+          </svg>
+        </span>
+        <span>CSV Cleanroom</span>
+      </a>
+      <p class="header-meta"><span class="status-dot" aria-hidden="true"></span>100% local · no upload</p>
+    </header>
+
+    <section class="hero">
+      <p class="eyebrow">Browser-only CSV hygiene</p>
+      <h1>Make messy CSV <em>usable</em> in one pass.</h1>
+      <p class="lede">Exports from a shop, CRM, or ERP rarely arrive clean. Drop one in and get trimmed cells, plain ASCII headers, ISO dates, and no duplicate rows — without sending a single row anywhere.</p>
+      <ul class="badges" aria-label="Privacy and offline guarantees">
+        <li>No upload</li>
+        <li>No cookies</li>
+        <li>No trackers</li>
+        <li>Works offline</li>
+      </ul>
+    </section>
+
+    <main id="main">
+      <section class="workspace" aria-label="CSV cleaner">
+        <div class="panel input-panel">
+          <div class="panel-head">
+            <span class="step" aria-hidden="true">01</span>
+            <div>
+              <h2>Load your CSV</h2>
+              <p>Choose a file or paste the raw text. Nothing leaves this tab.</p>
+            </div>
+          </div>
+
+          <label class="dropzone" id="drop-zone" for="file-input">
+            <span class="dropzone-top">
+              <span class="dropzone-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 16V4m0 0L7 9m5-5 5 5"></path>
+                  <path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"></path>
+                </svg>
+              </span>
+              <span class="dropzone-title">Drop a CSV here or browse</span>
+            </span>
+            <span class="dropzone-hint">CSV, TSV, or TXT · detected delimiter · up to 25 MB</span>
+            <input class="visually-hidden" id="file-input" type="file" accept=".csv,.tsv,.txt,text/csv,text/plain,text/tab-separated-values">
+          </label>
+          <p class="file-name" id="file-name" hidden></p>
+
+          <div class="or"><span>or paste text</span></div>
+
+          <div class="field">
+            <label for="csv-input">CSV text</label>
+            <textarea id="csv-input" rows="8" spellcheck="false" placeholder="name,email,amount,date&#10;Jan Novak,jan@example.com,&quot;1 234,50&quot;,05.01.2024"></textarea>
+          </div>
+
+          <div class="options">
+            <div class="field">
+              <label for="delimiter">Delimiter</label>
+              <select id="delimiter">
+                <option value="auto" selected>Auto-detect</option>
+                <option value=",">Comma (,)</option>
+                <option value=";">Semicolon (;)</option>
+                <option value="&#9;">Tab</option>
+                <option value="|">Pipe (|)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="date-order">Ambiguous dates</label>
+              <select id="date-order">
+                <option value="DMY" selected>Day first (05/01 = 5 Jan)</option>
+                <option value="MDY">Month first (05/01 = Jan 5)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="checkline">
+            <input type="checkbox" id="bom-output">
+            <label for="bom-output">Add a UTF-8 BOM to the download <span>(helps older Excel)</span></label>
+          </div>
+
+          <div class="actions">
+            <button id="clean-btn" class="btn btn-primary" type="button">
+              <span>Clean CSV</span>
+              <kbd>Ctrl ↵</kbd>
+            </button>
+            <button id="sample-btn" class="btn btn-ghost" type="button">Load sample</button>
+            <button id="clear-btn" class="btn btn-quiet" type="button">Clear</button>
+          </div>
+          <p class="shortcut-note">Tip: press Ctrl / ⌘ + Enter inside the text box to clean.</p>
+
+          <p class="notice" id="notice" role="status" aria-live="polite" hidden></p>
+        </div>
+
+        <div class="panel output-panel">
+          <div class="panel-head">
+            <span class="step" aria-hidden="true">02</span>
+            <div>
+              <h2>Review &amp; download</h2>
+              <p id="result-meta">Nothing cleaned yet.</p>
+            </div>
+          </div>
+
+          <dl class="stats" aria-label="Cleaning summary">
+            <div class="stat">
+              <dt>Rows out</dt>
+              <dd id="stat-rows">0</dd>
+            </div>
+            <div class="stat">
+              <dt>Rows repaired</dt>
+              <dd id="stat-repaired">0</dd>
+            </div>
+            <div class="stat">
+              <dt>Duplicates</dt>
+              <dd id="stat-duplicates">0</dd>
+            </div>
+          </dl>
+          <p class="details" id="stat-details">Trimmed cells, decimal fixes, date fixes, and renamed headers will show up here.</p>
+
+          <div class="table-shell">
+            <div class="table-empty" id="table-empty">
+              <svg class="empty-glyph" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+                <rect x="7" y="10" width="34" height="28" rx="4"></rect>
+                <path d="M7 19h34M17 19v19M28 19v19M7 28h34"></path>
+              </svg>
+              <p>Your cleaned rows will appear here.</p>
+              <p class="empty-sub">A 20-row preview, with normalized headers.</p>
+            </div>
+            <div class="table-scroll" id="table-scroll" tabindex="0" role="region" aria-label="Preview of cleaned CSV" hidden>
+              <table>
+                <caption class="visually-hidden">First 20 rows of the cleaned CSV</caption>
+                <thead id="preview-head"></thead>
+                <tbody id="preview-body"></tbody>
+              </table>
+            </div>
+          </div>
+          <p class="preview-note" id="preview-note"></p>
+
+          <div class="output-actions">
+            <button id="download-btn" class="btn btn-primary" type="button" disabled>Download cleaned CSV</button>
+            <button id="copy-btn" class="btn btn-ghost" type="button" disabled>Copy</button>
+          </div>
+        </div>
+      </section>
+
+      <noscript>
+        <p class="noscript">This tool needs JavaScript because all cleaning happens locally in your browser. No data is uploaded.</p>
+      </noscript>
+
+      <section class="cta" aria-labelledby="cta-title">
+        <div class="cta-copy">
+          <p class="eyebrow">When the browser isn't enough</p>
+          <h2 id="cta-title">Need Excel reports and a CLI that runs on 100k rows?</h2>
+          <p>Python Automation Bundle — reusable scripts for large CSV files, formatted Excel reports, and repeatable cleanup.</p>
+        </div>
+        <a class="btn-cta" href="https://jachym00.gumroad.com/l/ouuvb" target="_blank" rel="noopener">Python Automation Bundle <span aria-hidden="true">↗</span></a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p><strong>Private by design.</strong> Files are processed locally in your browser. No uploads, no cookies, no trackers.</p>
+      <p class="footer-meta">© 2026 Jachym Solta · MIT License</p>
+    </footer>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
