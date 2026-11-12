@@ -1,6 +1,6 @@
 # CSV Cleanroom
 
-A free, single-page CSV cleaner that runs **entirely in the browser**. No server, no uploads, no cookies, no trackers, no build step. Built as a free companion to the [Python Automation Bundle](https://jachym00.gumroad.com/l/ouuvb).
+A free, single-page CSV cleaner that runs **entirely in the browser**. No server, no uploads, no cookies, no trackers, no build step. Built as a free companion to the [Python Automation Bundle](https://jachym00.gumroad.com/l/qafztd).
 
 ## What it does
 
